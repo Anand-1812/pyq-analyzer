@@ -1,0 +1,763 @@
+{
+  "paper_count": 1,
+  "question_count": 15,
+  "syllabus_topic_count": 252,
+  "syllabus_topics": [
+    "S31002: Machine Learning",
+    "School of Computer Engineering",
+    "KIIT Deemed to be University",
+    "Bhubaneswar",
+    "Session: Nov 2025-April 2026",
+    "redit: 4",
+    "SYLLABUS AND LESSON PLAN",
+    "nstructor",
+    "pika Dewangan",
+    "Email: lipika.dewanganfcs@kiit.ac.in",
+    "hamber: B021(B)",
+    "Campus-25",
+    "ourse Objective",
+    "To provide a broad survey of different machine-learning approaches and",
+    "techniques",
+    "To understand the principles and concepts of machine learning",
+    "To learn regression and classification models",
+    "To learn different clustering models",
+    "To understand artificial neural networks (ANN) and Convolutional neural",
+    "networks (CNN) concepts",
+    "To develop programming skills that help to build real-world applications",
+    "based on machine learning",
+    "ourse Outcome: At the end of the course",
+    "the students will be able to",
+    "O1: Solve typical machine learning problems",
+    "ompare and contrast different data representations to facilitate",
+    "earning",
+    "Apply the concept of regression methods",
+    "classification methods",
+    "ustering methods.",
+    "Suggest supervised",
+    "unsupervised machine learning approaches for",
+    "any application",
+    "O5: Implement algorithms using machine learning tools",
+    "esign and implement various machine learning algorithms in a range",
+    "of real-world applications.",
+    "Syllabus",
+    "ntroduction",
+    "ntroduction to Machine learning",
+    "Types of Machine Learning",
+    "Supervised",
+    "Unsupervised Learning. The Curse of dimensionality",
+    "over fitting and",
+    "under fitting",
+    "Model selection",
+    "Error analysis and validation",
+    "Parametric vs. non",
+    "parametric models.",
+    "Regression and Classification",
+    "ultiple Linear Regression",
+    "KNN model",
+    "Logistic Regression",
+    "Na\u00efve Bayes",
+    "assifier",
+    "Decision trees",
+    "Support Vector Machines",
+    "Dimensionality reduction",
+    "Principal Component Analysis",
+    "ustering",
+    "ustering approaches",
+    "Mean Shift clustering",
+    "Clustering data points and",
+    "features",
+    "Bi-clustering",
+    "Multi-view clustering",
+    "K-Means clustering",
+    "K-medians",
+    "Expectation Maximization (EM)",
+    "Neural Networks",
+    "Biological motivation for Neural Network",
+    "Neural network",
+    "Representation",
+    "Perceptron",
+    "Feed forward networks",
+    "Multilayer Networks and",
+    "Back Propagation Algorithms",
+    "Hidden layer representation",
+    "Application of neural",
+    "network.",
+    "Applications and Tools",
+    "near models for regression",
+    "Reinforcement Learning",
+    "Machine Learning Tools",
+    "Engineering applications.",
+    "ay Wise Lesson Plan",
+    "ecture Topics",
+    "Introduction to Machine Learning",
+    "definition",
+    "and real-world",
+    "applications.",
+    "Types of machine learning - Supervised",
+    "Unsupervised",
+    "Semi",
+    "supervised learning",
+    "Definitions and examples",
+    "Regression - Linear Regression",
+    "Intuition",
+    "Cost Function",
+    "Linear Regression - Gradient Descent",
+    "Multiple Linear regression",
+    "Closed-form Equation",
+    "Type of Gradient Descent (Batch",
+    "Stochastic",
+    "ni-batch) - Definition",
+    "properties",
+    "Normalization and Standardization (definition and why)",
+    "Overfitting",
+    "and Underfitting",
+    "Bias",
+    "Variance",
+    "Bias and Variance trade-off",
+    "Regularization - Lasso Regularization",
+    "Ridge Regularization",
+    "ACTIVITY-1",
+    "Classification",
+    "Logistic Regression - 1 (binary)",
+    "Logistic Regression - 2 (binary)",
+    "Nearest neighbour and K Nearest Neighbour",
+    "Error Analysis - Train",
+    "Test Split",
+    "validation set",
+    "Accuracy",
+    "Precision",
+    "Recall",
+    "F-measure",
+    "ROC curve",
+    "Confusion Matrix",
+    "Naive Bayes Classifier - 1",
+    "Naive Bayes Classifier - 2",
+    "Decision Tree: Introduction",
+    "Id3 Algorithm - 1",
+    "Decision Tree - Id3 Algorithm - 2",
+    "Decision Tree - Problem of Overfitting",
+    "Pre-pruning",
+    "post-pruning",
+    "ecision Tree",
+    "Examples",
+    "Support Vector Machine - Terminologies",
+    "Learning",
+    "erivation - 1",
+    "erivation - 2",
+    "Support Vector Machine - KKT Condition - 3",
+    "Support Vector Machine - Kernel",
+    "Nonlinear Classification",
+    "ulti-class (Basic concept) - 4",
+    "ACTIVITY-2",
+    "SEMESTER",
+    "Principal Component Analysis - Steps",
+    "merits",
+    "demerits",
+    "Intuition - 1",
+    "Intuition - 2",
+    "Understanding and Implementing PCA using SVD for dimensionality",
+    "reduction",
+    "Clustering: Introduction",
+    "K-means Clustering - 1",
+    "K-Median Clustering - 2",
+    "K-Means Clustering \u2013 3 (Numerical)",
+    "DBSCAN Clustering - Why we use?",
+    "parameters",
+    "characterization of",
+    "points",
+    "steps",
+    "determining parameters",
+    "time",
+    "space complexities",
+    "Hierarchical Clustering - Agglomerative Clustering",
+    "Single",
+    "Complete",
+    "Average",
+    "Centroid Linkage",
+    "Hierarchical Clustering - Divisive hierarchical clustering",
+    "ACTIVITY-3",
+    "Introduction Neural networks",
+    "McCulloch-Pitts Neuron",
+    "Least Mean Square (LMS) Algorithm",
+    "Perceptron Model",
+    "Multilayer Perceptron (MLP) and Hidden layer representation",
+    "Non-linear problem solving",
+    "Activation Functions",
+    "Backpropagation Algorithm - 1",
+    "Backpropagation Algorithm - 2",
+    "Exploding Gradient Problem and Vanishing Gradient Problem",
+    "and how to avoid",
+    "Introduction to Convolutional Neural Network (CNN)",
+    "Basic idea about their working and structure",
+    "Data Augmentation",
+    "Batch Normalization",
+    "Dropout",
+    "ACTIVITY-4",
+    "Introduce machine learning tools like Scikit Learn",
+    "PyTorch",
+    "TensorFlow",
+    "Kaggle competitions",
+    "ase Study (Any Two)",
+    "features like size",
+    "location",
+    "and number of rooms",
+    "ase Study \u2013 2: Feature Extraction using PCA for Wine Dataset",
+    "ase Study \u2013 3: Classification using Iris Dataset",
+    "ase Study \u2013 4: Clustering using Iris Dataset",
+    "ase Study \u2013 5: Classification of MNIST Dataset using CNN Model",
+    "Text books",
+    "Madan Gopal",
+    "\u201cApplied Machine Learning\u201d",
+    "TMH Publication (Link)",
+    "Kevin P. Murphy",
+    "\u201cProbabilistic Machine Learning\u201d",
+    "MIT Press",
+    "2023. (Link)",
+    "Ethem Alpaydin",
+    "\u201cIntroduction to Machine Learning\u201d",
+    "Fourth Edition",
+    "(Link)",
+    "Laurene Fausett",
+    "\u201cFundamentals of Neural Networks",
+    "Architectures",
+    "Algorithms",
+    "and Applications\u201d",
+    "Pearson Education",
+    "2008. (Link)",
+    "C. M. Bishop",
+    "\u201cPattern Recognition and Machine Learning\u201d",
+    "Springer",
+    "2007(Link)",
+    "Simon Haykin",
+    "\u201cNeural Networks and Learning Machines\u201d",
+    "Pearson 2008(Link)",
+    "Online Resources",
+    "Machine Learning by Prof. Andrew NG (Link)",
+    "Machine Learning for Engineering and Science Applications NPTEL Course",
+    "adras (Link)",
+    "Deep Learning by Prof. Mitesh M. Khapra (Link)",
+    "Grading Policy",
+    "\uf0b7 Assignments",
+    "quizzes",
+    "activities: 30 Marks",
+    "\uf0b7 Mid-semester exam: 20 Marks",
+    "\uf0b7 End-semester exam: 50 Marks",
+    "nternal Activities",
+    "ACTIVITY",
+    "TYPE DATE MARKS CO",
+    "SL.NO.",
+    "Quiz-1 10thJan-15th Jan 5 CO1-CO2",
+    "Assignment 1st Feb-5th Feb 5 CO3",
+    "Class Test 24th Feb-28th Feb 5 CO1-CO3",
+    "SEM EXAM",
+    "Quiz-2 10th Mar-15th Mar 10 CO4-CO5",
+    "oding",
+    "1st Apr-5th Apr 5 CO6",
+    "Assignment",
+    "END SEM EXAM"
+  ],
+  "repeated_topics": [
+    {
+      "topic": "To provide a broad survey of different machine-learning approaches and",
+      "score": 1.0,
+      "frequency": 1,
+      "year_coverage": 1,
+      "years": [
+        2025
+      ]
+    },
+    {
+      "topic": "To understand the principles and concepts of machine learning",
+      "score": 1.0,
+      "frequency": 1,
+      "year_coverage": 1,
+      "years": [
+        2025
+      ]
+    },
+    {
+      "topic": "To learn regression and classification models",
+      "score": 1.0,
+      "frequency": 1,
+      "year_coverage": 1,
+      "years": [
+        2025
+      ]
+    },
+    {
+      "topic": "To learn different clustering models",
+      "score": 1.0,
+      "frequency": 1,
+      "year_coverage": 1,
+      "years": [
+        2025
+      ]
+    },
+    {
+      "topic": "To understand artificial neural networks (ANN) and Convolutional neural",
+      "score": 1.0,
+      "frequency": 1,
+      "year_coverage": 1,
+      "years": [
+        2025
+      ]
+    },
+    {
+      "topic": "Machine Learning Tools",
+      "score": 1.0,
+      "frequency": 1,
+      "year_coverage": 1,
+      "years": [
+        2025
+      ]
+    },
+    {
+      "topic": "TMH Publication (Link)",
+      "score": 1.0,
+      "frequency": 1,
+      "year_coverage": 1,
+      "years": [
+        2025
+      ]
+    },
+    {
+      "topic": "\u201cProbabilistic Machine Learning\u201d",
+      "score": 1.0,
+      "frequency": 1,
+      "year_coverage": 1,
+      "years": [
+        2025
+      ]
+    },
+    {
+      "topic": "\u201cIntroduction to Machine Learning\u201d",
+      "score": 1.0,
+      "frequency": 1,
+      "year_coverage": 1,
+      "years": [
+        2025
+      ]
+    },
+    {
+      "topic": "\u201cFundamentals of Neural Networks",
+      "score": 1.0,
+      "frequency": 1,
+      "year_coverage": 1,
+      "years": [
+        2025
+      ]
+    },
+    {
+      "topic": "\u201cPattern Recognition and Machine Learning\u201d",
+      "score": 1.0,
+      "frequency": 1,
+      "year_coverage": 1,
+      "years": [
+        2025
+      ]
+    },
+    {
+      "topic": "\u201cNeural Networks and Learning Machines\u201d",
+      "score": 1.0,
+      "frequency": 1,
+      "year_coverage": 1,
+      "years": [
+        2025
+      ]
+    },
+    {
+      "topic": "Machine Learning by Prof. Andrew NG (Link)",
+      "score": 1.0,
+      "frequency": 1,
+      "year_coverage": 1,
+      "years": [
+        2025
+      ]
+    },
+    {
+      "topic": "Machine Learning for Engineering and Science Applications NPTEL Course",
+      "score": 1.0,
+      "frequency": 1,
+      "year_coverage": 1,
+      "years": [
+        2025
+      ]
+    },
+    {
+      "topic": "Class Test 24th Feb-28th Feb 5 CO1-CO3",
+      "score": 1.0,
+      "frequency": 1,
+      "year_coverage": 1,
+      "years": [
+        2025
+      ]
+    }
+  ],
+  "likely_topics": [
+    {
+      "topic": "To provide a broad survey of different machine-learning approaches and",
+      "score": 1.0,
+      "frequency": 1,
+      "year_coverage": 1,
+      "years": [
+        2025
+      ]
+    },
+    {
+      "topic": "To understand the principles and concepts of machine learning",
+      "score": 1.0,
+      "frequency": 1,
+      "year_coverage": 1,
+      "years": [
+        2025
+      ]
+    },
+    {
+      "topic": "To learn regression and classification models",
+      "score": 1.0,
+      "frequency": 1,
+      "year_coverage": 1,
+      "years": [
+        2025
+      ]
+    },
+    {
+      "topic": "To learn different clustering models",
+      "score": 1.0,
+      "frequency": 1,
+      "year_coverage": 1,
+      "years": [
+        2025
+      ]
+    },
+    {
+      "topic": "To understand artificial neural networks (ANN) and Convolutional neural",
+      "score": 1.0,
+      "frequency": 1,
+      "year_coverage": 1,
+      "years": [
+        2025
+      ]
+    },
+    {
+      "topic": "Machine Learning Tools",
+      "score": 1.0,
+      "frequency": 1,
+      "year_coverage": 1,
+      "years": [
+        2025
+      ]
+    },
+    {
+      "topic": "TMH Publication (Link)",
+      "score": 1.0,
+      "frequency": 1,
+      "year_coverage": 1,
+      "years": [
+        2025
+      ]
+    },
+    {
+      "topic": "\u201cProbabilistic Machine Learning\u201d",
+      "score": 1.0,
+      "frequency": 1,
+      "year_coverage": 1,
+      "years": [
+        2025
+      ]
+    },
+    {
+      "topic": "\u201cIntroduction to Machine Learning\u201d",
+      "score": 1.0,
+      "frequency": 1,
+      "year_coverage": 1,
+      "years": [
+        2025
+      ]
+    },
+    {
+      "topic": "\u201cFundamentals of Neural Networks",
+      "score": 1.0,
+      "frequency": 1,
+      "year_coverage": 1,
+      "years": [
+        2025
+      ]
+    }
+  ],
+  "question_topic_mapping": [
+    {
+      "year": 2025,
+      "question_id": "Q1",
+      "question_text": "To provide a broad survey of different machine-learning approaches and techniques",
+      "matches": [
+        {
+          "topic": "To provide a broad survey of different machine-learning approaches and",
+          "similarity": 0.9688
+        },
+        {
+          "topic": "unsupervised machine learning approaches for",
+          "similarity": 0.3464
+        },
+        {
+          "topic": "techniques",
+          "similarity": 0.2478
+        }
+      ]
+    },
+    {
+      "year": 2025,
+      "question_id": "Q2",
+      "question_text": "To understand the principles and concepts of machine learning",
+      "matches": [
+        {
+          "topic": "To understand the principles and concepts of machine learning",
+          "similarity": 1.0
+        }
+      ]
+    },
+    {
+      "year": 2025,
+      "question_id": "Q3",
+      "question_text": "To learn regression and classification models",
+      "matches": [
+        {
+          "topic": "To learn regression and classification models",
+          "similarity": 1.0
+        },
+        {
+          "topic": "Regression and Classification",
+          "similarity": 0.5099
+        },
+        {
+          "topic": "Classification",
+          "similarity": 0.2801
+        }
+      ]
+    },
+    {
+      "year": 2025,
+      "question_id": "Q4",
+      "question_text": "To learn different clustering models",
+      "matches": [
+        {
+          "topic": "To learn different clustering models",
+          "similarity": 1.0
+        },
+        {
+          "topic": "To learn regression and classification models",
+          "similarity": 0.1969
+        }
+      ]
+    },
+    {
+      "year": 2025,
+      "question_id": "Q5",
+      "question_text": "To understand artificial neural networks (ANN) and Convolutional neural networks (CNN) concepts",
+      "matches": [
+        {
+          "topic": "To understand artificial neural networks (ANN) and Convolutional neural",
+          "similarity": 0.8781
+        },
+        {
+          "topic": "Neural Networks",
+          "similarity": 0.525
+        },
+        {
+          "topic": "networks (CNN) concepts",
+          "similarity": 0.5024
+        }
+      ]
+    },
+    {
+      "year": 2025,
+      "question_id": "Q6",
+      "question_text": "To develop programming skills that help to build real-world applications based on machine learning Course Outcome: At the end of the course, the students will be able to: CO1: Solve typical machine learning problems Compare and contrast different data representations to facilitate CO2: learning Apply the concept of regression methods, classification methods, and CO3: clustering methods. Suggest supervised /unsupervised machine learning approaches for CO4: any application CO5: Implement algorithms using machine learning tools Design and implement various machine learning algorithms in a range CO6: of real-world applications. Syllabus: UNIT I Introduction: Introduction to Machine learning, Types of Machine Learning, Supervised Learning, Unsupervised Learning. The Curse of dimensionality, over fitting and under fitting, Model selection, Error analysis and validation, Parametric vs. non- parametric models. UNIT II Regression and Classification: Multiple Linear Regression, KNN model, Logistic Regression, Na\u00efve Bayes Classifier, Decision trees, Support Vector Machines, Dimensionality reduction, Principal Component Analysis UNIT III Clustering: Clustering approaches, Mean Shift clustering, Clustering data points and features, Bi-clustering, Multi-view clustering, K-Means clustering, K-medians clustering, Expectation Maximization (EM). UNIT IV Neural Networks: Neural networks, Biological motivation for Neural Network, Neural network Representation, Perceptron, Feed forward networks, Multilayer Networks and Back Propagation Algorithms, Hidden layer representation, Application of neural network. UNIT V Applications and Tools: Linear models for regression, Reinforcement Learning, Machine Learning Tools, Engineering applications. Day Wise Lesson Plan: MODULE 1 Lecture Topics 1 Introduction to Machine Learning, definition, and real-world applications. 2 Types of machine learning - Supervised, Unsupervised, Semi supervised learning, Definitions and examples. 3 Regression - Linear Regression, Intuition, Cost Function 4 Linear Regression - Gradient Descent 5 Multiple Linear regression 6 Closed-form Equation, Type of Gradient Descent (Batch, Stochastic, Mini-batch) - Definition, properties. 7 Normalization and Standardization (definition and why), Overfitting and Underfitting 8 Bias, Variance, Bias and Variance trade-off 9 Regularization - Lasso Regularization, Ridge Regularization 10 ACTIVITY-1 MODULE 2 Lecture Topics 11 Classification, Logistic Regression - 1 (binary) 12 Logistic Regression - 2 (binary) 13 Nearest neighbour and K Nearest Neighbour 14 Error Analysis - Train/Test Split, validation set, Accuracy, Precision, Recall, F-measure, ROC curve, Confusion Matrix 15 Naive Bayes Classifier - 1 16 Naive Bayes Classifier - 2 17 Decision Tree: Introduction, Id3 Algorithm - 1 18 Decision Tree - Id3 Algorithm - 2 19 Decision Tree - Problem of Overfitting, Pre-pruning/post-pruning Decision Tree, Examples. 20 Support Vector Machine - Terminologies, Intuition, Learning, Derivation - 1 21 Support Vector Machine - Terminologies, Intuition, Learning, Derivation - 2 22 Support Vector Machine - KKT Condition - 3 23 Support Vector Machine - Kernel, Nonlinear Classification, and multi-class (Basic concept) - 4 24 ACTIVITY-2 MID SEMESTER 25 Principal Component Analysis - Steps, merits, demerits, Intuition - 1 26 Principal Component Analysis - Steps, merits, demerits, Intuition - 2 27 Understanding and Implementing PCA using SVD for dimensionality reduction MODULE 3 Lecture Topics 28 Clustering: Introduction, K-means Clustering - 1 29 K-Median Clustering - 2 30 K-Means Clustering \u2013 3 (Numerical) 31 DBSCAN Clustering - Why we use?, parameters, characterization of points, steps, determining parameters, time/space complexities 32 Mean Shift Clustering 33 Hierarchical Clustering - Agglomerative Clustering, Single/Complete/Average/Centroid Linkage 34 Hierarchical Clustering - Divisive hierarchical clustering 35 ACTIVITY-3 MODULE 4 Lecture Topics 36 Introduction Neural networks, McCulloch-Pitts Neuron 37 Least Mean Square (LMS) Algorithm 38 Perceptron Model 39 Multilayer Perceptron (MLP) and Hidden layer representation 40 Non-linear problem solving, Activation Functions 41 Backpropagation Algorithm - 1 42 Backpropagation Algorithm - 2 43 Exploding Gradient Problem and Vanishing Gradient Problem, why and how to avoid 44 Introduction to Convolutional Neural Network (CNN) 45 Basic idea about their working and structure 46 Data Augmentation, Batch Normalization, Dropout 47 ACTIVITY-4 MODULE 5 Lecture Topics 48 Introduce machine learning tools like Scikit Learn, PyTorch, TensorFlow, Kaggle competitions, etc. Case Study (Any Two) Case Study \u2013 1: Implement linear regression to predict house prices based on features like size, location, and number of rooms. Case Study \u2013 2: Feature Extraction using PCA for Wine Dataset Case Study \u2013 3: Classification using Iris Dataset Case Study \u2013 4: Clustering using Iris Dataset Case Study \u2013 5: Classification of MNIST Dataset using CNN Model Text books:",
+      "matches": [
+        {
+          "topic": "Machine Learning Tools",
+          "similarity": 0.2779
+        },
+        {
+          "topic": "\u201cIntroduction to Machine Learning\u201d",
+          "similarity": 0.2779
+        },
+        {
+          "topic": "Introduction to Machine Learning",
+          "similarity": 0.2779
+        }
+      ]
+    },
+    {
+      "year": 2025,
+      "question_id": "Q1",
+      "question_text": "Madan Gopal, \u201cApplied Machine Learning\u201d, TMH Publication (Link)",
+      "matches": [
+        {
+          "topic": "TMH Publication (Link)",
+          "similarity": 0.6643
+        },
+        {
+          "topic": "\u201cApplied Machine Learning\u201d",
+          "similarity": 0.5648
+        },
+        {
+          "topic": "Madan Gopal",
+          "similarity": 0.4895
+        }
+      ]
+    },
+    {
+      "year": 2025,
+      "question_id": "Q2",
+      "question_text": "Kevin P. Murphy, \u201cProbabilistic Machine Learning\u201d, MIT Press, 2023. (Link)",
+      "matches": [
+        {
+          "topic": "\u201cProbabilistic Machine Learning\u201d",
+          "similarity": 0.5648
+        },
+        {
+          "topic": "MIT Press",
+          "similarity": 0.4895
+        },
+        {
+          "topic": "Kevin P. Murphy",
+          "similarity": 0.4895
+        }
+      ]
+    },
+    {
+      "year": 2025,
+      "question_id": "Q3",
+      "question_text": "Ethem Alpaydin, \u201cIntroduction to Machine Learning\u201d, Fourth Edition, MIT Press, 2010. (Link) Reference Books:",
+      "matches": [
+        {
+          "topic": "\u201cIntroduction to Machine Learning\u201d",
+          "similarity": 0.491
+        },
+        {
+          "topic": "Introduction to Machine Learning",
+          "similarity": 0.491
+        },
+        {
+          "topic": "MIT Press",
+          "similarity": 0.4651
+        }
+      ]
+    },
+    {
+      "year": 2025,
+      "question_id": "Q1",
+      "question_text": "Laurene Fausett, \u201cFundamentals of Neural Networks, Architectures, Algorithms and Applications\u201d, Pearson Education, 2008. (Link)",
+      "matches": [
+        {
+          "topic": "\u201cFundamentals of Neural Networks",
+          "similarity": 0.5591
+        },
+        {
+          "topic": "Laurene Fausett",
+          "similarity": 0.445
+        },
+        {
+          "topic": "Pearson Education",
+          "similarity": 0.4349
+        }
+      ]
+    },
+    {
+      "year": 2025,
+      "question_id": "Q2",
+      "question_text": "C. M. Bishop, \u201cPattern Recognition and Machine Learning\u201d, Springer, 2007(Link)",
+      "matches": [
+        {
+          "topic": "\u201cPattern Recognition and Machine Learning\u201d",
+          "similarity": 0.7792
+        },
+        {
+          "topic": "2007(Link)",
+          "similarity": 0.4682
+        },
+        {
+          "topic": "Springer",
+          "similarity": 0.2946
+        }
+      ]
+    },
+    {
+      "year": 2025,
+      "question_id": "Q3",
+      "question_text": "Simon Haykin, \u201cNeural Networks and Learning Machines\u201d, Pearson 2008(Link) Online Resources:",
+      "matches": [
+        {
+          "topic": "\u201cNeural Networks and Learning Machines\u201d",
+          "similarity": 0.619
+        },
+        {
+          "topic": "Pearson 2008(Link)",
+          "similarity": 0.533
+        },
+        {
+          "topic": "Online Resources",
+          "similarity": 0.4079
+        }
+      ]
+    },
+    {
+      "year": 2025,
+      "question_id": "Q1",
+      "question_text": "Machine Learning by Prof. Andrew NG (Link)",
+      "matches": [
+        {
+          "topic": "Machine Learning by Prof. Andrew NG (Link)",
+          "similarity": 1.0
+        },
+        {
+          "topic": "(Link)",
+          "similarity": 0.207
+        },
+        {
+          "topic": "Deep Learning by Prof. Mitesh M. Khapra (Link)",
+          "similarity": 0.1989
+        }
+      ]
+    },
+    {
+      "year": 2025,
+      "question_id": "Q2",
+      "question_text": "Machine Learning for Engineering and Science Applications NPTEL Course, IIT Madras (Link)",
+      "matches": [
+        {
+          "topic": "Machine Learning for Engineering and Science Applications NPTEL Course",
+          "similarity": 0.9832
+        },
+        {
+          "topic": "Engineering applications.",
+          "similarity": 0.2229
+        },
+        {
+          "topic": "applications.",
+          "similarity": 0.1922
+        }
+      ]
+    },
+    {
+      "year": 2025,
+      "question_id": "Q3",
+      "question_text": "Deep Learning by Prof. Mitesh M. Khapra (Link) Grading Policy: \uf0b7 Assignments/quizzes/activities: 30 Marks \uf0b7 Mid-semester exam: 20 Marks \uf0b7 End-semester exam: 50 Marks Internal Activities: ACTIVITY TYPE DATE MARKS CO SL.NO. 1 Quiz-1 10thJan-15th Jan 5 CO1-CO2 2 Assignment 1st Feb-5th Feb 5 CO3 3 Class Test 24th Feb-28th Feb 5 CO1-CO3 MID SEM EXAM 3 Quiz-2 10th Mar-15th Mar 10 CO4-CO5 Coding 4 1st Apr-5th Apr 5 CO6 Assignment END SEM EXAM",
+      "matches": [
+        {
+          "topic": "Class Test 24th Feb-28th Feb 5 CO1-CO3",
+          "similarity": 0.4088
+        },
+        {
+          "topic": "Assignment 1st Feb-5th Feb 5 CO3",
+          "similarity": 0.4042
+        },
+        {
+          "topic": "\uf0b7 Mid-semester exam: 20 Marks",
+          "similarity": 0.3813
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,94 @@
+# Exam Topic Predictor
+
+This project analyzes previous-year question papers against a syllabus PDF to:
+
+1. Extract question text from each paper
+2. Map each question to syllabus topics
+3. Find repeatedly asked topics
+4. Forecast likely upcoming topics
+
+## Folder Structure
+
+```text
+exam-topic-predictor/
+├── data/
+│   ├── raw/            # Put syllabus and paper PDFs here (optional)
+│   ├── processed/
+│   └── outputs/        # Generated reports
+├── src/exam_topic_predictor/
+│   ├── io/
+│   ├── parsing/
+│   ├── mapping/
+│   ├── modeling/
+│   ├── reporting/
+│   ├── cli.py
+│   └── pipeline.py
+├── app.py             # Streamlit GUI
+├── tests/
+├── pyproject.toml
+└── requirements.txt
+```
+
+## Installation
+
+```bash
+cd exam-topic-predictor
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+pip install -e . --no-build-isolation
+```
+
+## Input Convention
+
+- Syllabus: one PDF file.
+- Previous-year papers: one PDF per year.
+- Include the year in each paper filename, for example:
+  - `dbms_2021.pdf`
+  - `dbms_2022.pdf`
+  - `dbms_2023.pdf`
+
+## Run
+
+Using a directory:
+
+```bash
+exam-topic-predictor \
+  --syllabus data/raw/syllabus.pdf \
+  --papers-dir data/raw \
+  --output-dir data/outputs \
+  --top-n 10
+```
+
+Using explicit files:
+
+```bash
+exam-topic-predictor \
+  --syllabus data/raw/syllabus.pdf \
+  --papers data/raw/dbms_2021.pdf data/raw/dbms_2022.pdf data/raw/dbms_2023.pdf \
+  --output-dir data/outputs
+```
+
+## GUI Run
+
+```bash
+streamlit run app.py
+```
+
+Open the local URL shown in terminal, upload the PDFs, then click `Run Analysis`.
+
+## Output Files
+
+- `analysis_summary.json`: Full structured result
+- `question_topic_mapping.csv`: Question-level mapped topics with similarity
+- `topic_predictions.csv`: Forecasted likely topics with scores
+
+## Model Logic
+
+- Topic mapping uses TF-IDF cosine similarity between question text and extracted syllabus topics.
+- Forecast score combines:
+  - Topic frequency in previous papers
+  - Coverage across years
+  - Repetition cycle alignment (topic recurrence timing)
+
+This is a practical statistical baseline and works well for academic revision planning with limited data.

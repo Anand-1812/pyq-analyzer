@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "exam-topic-predictor"
+version = "0.1.0"
+description = "Map exam-paper questions to syllabus topics and forecast likely recurring topics."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+  "numpy>=1.26,<3.0",
+  "pdfplumber>=0.11,<1.0",
+  "scikit-learn>=1.5,<2.0",
+  "streamlit>=1.45,<2.0",
+]
+
+[project.scripts]
+exam-topic-predictor = "exam_topic_predictor.cli:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
