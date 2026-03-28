@@ -8,5 +8,5 @@ venv/
 data/raw/*.pdf
 data/processed/*
 !data/processed/.gitkeep
-data/outputs/*.json
-data/outputs/*.csv
+data/outputs/*
+!data/outputs/.gitkeep

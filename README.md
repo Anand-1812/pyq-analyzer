@@ -7,6 +7,8 @@ This project analyzes previous-year question papers against a syllabus PDF to:
 3. Find repeatedly asked topics
 4. Forecast likely upcoming topics
 
+It supports both text PDFs and scanned/image-only PDFs (OCR fallback).
+
 ## Folder Structure
 
 ```text

@@ -66,6 +66,9 @@ def main() -> None:
                     mapping_config=mapping_config,
                     top_n=top_n,
                 )
+        except ValueError as exc:
+            st.error(str(exc))
+            return
         except Exception as exc:  # noqa: BLE001
             st.exception(exc)
             return
