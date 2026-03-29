@@ -1,0 +1,2 @@
+[console_scripts]
+exam-topic-predictor = exam_topic_predictor.cli:main

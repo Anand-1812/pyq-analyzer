@@ -18,9 +18,10 @@ def build_parser() -> ArgumentParser:
     parser.add_argument("--syllabus", type=Path, required=True, help="Path to syllabus PDF.")
     parser.add_argument("--papers-dir", type=Path, help="Directory containing previous-year paper PDFs.")
     parser.add_argument("--papers", type=Path, nargs="+", help="One or more previous-year paper PDF files.")
+    parser.add_argument("--topics-file", type=Path, help="Optional text file with one syllabus topic per line.")
     parser.add_argument("--output-dir", type=Path, default=Path("data/outputs"), help="Directory for generated reports.")
     parser.add_argument("--top-n", type=int, default=10, help="Number of likely topics to output.")
-    parser.add_argument("--min-similarity", type=float, default=0.18, help="Minimum question-topic similarity threshold.")
+    parser.add_argument("--min-similarity", type=float, default=0.4, help="Minimum question-topic similarity threshold.")
     parser.add_argument("--top-k-topics", type=int, default=3, help="Maximum syllabus topics to keep per question.")
     parser.add_argument("--min-question-chars", type=int, default=24, help="Minimum characters to accept a parsed question.")
     return parser
@@ -44,6 +45,7 @@ def main() -> int:
         min_question_characters=args.min_question_chars,
     )
     forecast_config = ForecastConfig()
+    manual_topics = read_manual_topics(args.topics_file) if args.topics_file else None
 
     result = run_pipeline(
         syllabus_pdf=args.syllabus,
@@ -51,6 +53,7 @@ def main() -> int:
         mapping_config=mapping_config,
         forecast_config=forecast_config,
         top_n=args.top_n,
+        manual_topics=manual_topics,
     )
     reports = write_reports(result, output_dir=args.output_dir)
 
@@ -59,7 +62,10 @@ def main() -> int:
     print(f"Papers processed: {result.paper_count}")
     print("Top likely topics:")
     for idx, item in enumerate(result.likely_topics, start=1):
-        print(f"{idx}. {item.topic} | score={item.score:.4f} | freq={item.frequency} | years={','.join(map(str, item.years))}")
+        print(
+            f"{idx}. {item.topic} | score={item.score:.4f} | confidence={item.confidence} "
+            f"| freq={item.frequency} | years={','.join(map(str, item.years))} | pattern={item.pattern}"
+        )
 
     print("\nGenerated files:")
     for key, path in reports.items():
@@ -83,6 +89,11 @@ def resolve_paper_paths(papers_dir: Path | None, papers: list[Path] | None) -> l
         seen.add(resolved)
         unique_paths.append(resolved)
     return unique_paths
+
+
+def read_manual_topics(path: Path) -> list[str]:
+    """Read a manual syllabus topic list from a text file."""
+    return [line.strip() for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
 
 
 if __name__ == "__main__":

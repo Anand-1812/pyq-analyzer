@@ -3,9 +3,10 @@ from pathlib import Path
 import re
 from tempfile import TemporaryDirectory
 
+import plotly.graph_objects as go
 import streamlit as st
 
-from exam_topic_predictor.config import MappingConfig
+from exam_topic_predictor.config import ForecastConfig, MappingConfig
 from exam_topic_predictor.pipeline import run_pipeline
 from exam_topic_predictor.reporting import write_reports
 
@@ -20,9 +21,15 @@ def main() -> None:
     with st.sidebar:
         st.subheader("Model Settings")
         top_n = st.slider("Likely topics (Top N)", min_value=3, max_value=20, value=10, step=1)
-        min_similarity = st.slider("Minimum topic similarity", min_value=0.0, max_value=0.9, value=0.18, step=0.01)
+        min_similarity = st.slider("Minimum topic similarity", min_value=0.0, max_value=0.95, value=0.4, step=0.01)
         top_k_topics = st.slider("Max topics per question", min_value=1, max_value=5, value=3, step=1)
         min_question_chars = st.slider("Minimum question length", min_value=10, max_value=120, value=24, step=2)
+        manual_topics_input = st.text_area(
+            "Optional: Provide Cleaned Topics (Comma Separated)",
+            help="Optional fallback. If provided, these topics override PDF syllabus extraction.",
+            height=120,
+            placeholder="Linear Regression, Logistic Regression, Decision Trees",
+        )
 
     syllabus_pdf = st.file_uploader("Syllabus PDF", type=["pdf"], accept_multiple_files=False)
     paper_pdfs = st.file_uploader("Previous-Year Paper PDFs", type=["pdf"], accept_multiple_files=True)
@@ -46,6 +53,8 @@ def main() -> None:
         top_k_topics=top_k_topics,
         min_question_characters=min_question_chars,
     )
+    forecast_config = ForecastConfig()
+    manual_topics = _parse_manual_topics(manual_topics_input)
 
     with st.spinner("Running analysis..."):
         try:
@@ -64,7 +73,9 @@ def main() -> None:
                     syllabus_pdf=syllabus_path,
                     paper_pdfs=paper_paths,
                     mapping_config=mapping_config,
+                    forecast_config=forecast_config,
                     top_n=top_n,
+                    manual_topics=manual_topics,
                 )
         except ValueError as exc:
             st.error(str(exc))
@@ -83,18 +94,35 @@ def main() -> None:
     metric_col2.metric("Questions Mapped", result.question_count)
     metric_col3.metric("Papers Processed", result.paper_count)
 
+    year_options = ["All"] + [str(year) for year in sorted(result.papers_by_year)]
+    topic_options = ["All"] + sorted({item.topic for item in result.likely_topics})
+    filter_col1, filter_col2 = st.columns(2)
+    selected_year = filter_col1.selectbox("Filter by year", options=year_options)
+    selected_topic = filter_col2.selectbox("Filter by topic", options=topic_options)
+
     st.subheader("Likely Upcoming Topics")
     likely_rows = [
         {
             "Topic": item.topic,
-            "Score": item.score,
+            "Score": f"{item.score:.2f}",
+            "Confidence": item.confidence,
             "Frequency": item.frequency,
             "Coverage (years)": item.year_coverage,
+            "Last appeared": item.last_appeared_year,
+            "Pattern": item.pattern,
             "Years": ", ".join(map(str, item.years)),
         }
         for item in result.likely_topics
     ]
-    st.dataframe(likely_rows, use_container_width=True, hide_index=True)
+    st.dataframe(
+        likely_rows,
+        use_container_width=True,
+        hide_index=True,
+        column_config={
+            "Confidence": st.column_config.TextColumn(help="Prediction confidence bucket"),
+            "Pattern": st.column_config.TextColumn(width="large"),
+        },
+    )
 
     st.subheader("Repeated Topics")
     repeated_rows = [
@@ -102,19 +130,36 @@ def main() -> None:
             "Topic": item.topic,
             "Frequency": item.frequency,
             "Coverage (years)": item.year_coverage,
+            "Last appeared": item.last_appeared_year,
+            "Pattern": item.pattern,
             "Years": ", ".join(map(str, item.years)),
         }
         for item in result.repeated_topics
     ]
     st.dataframe(repeated_rows, use_container_width=True, hide_index=True)
 
+    st.subheader("Charts")
+    st.caption("Frequency overview and year-wise heatmap for syllabus topics.")
+    st.plotly_chart(_build_frequency_bar_chart(result.likely_topics), use_container_width=True)
+    st.plotly_chart(
+        _build_topic_year_heatmap(
+            result.question_mappings,
+            selected_year=selected_year,
+            selected_topic=selected_topic,
+        ),
+        use_container_width=True,
+    )
+
     with st.expander("Question to Topic Mapping"):
         mapping_rows: list[dict[str, str | int | float]] = []
         for mapping in result.question_mappings:
+            if selected_year != "All" and str(mapping.year) != selected_year:
+                continue
             if not mapping.matches:
                 mapping_rows.append(
                     {
                         "Year": mapping.year,
+                        "Paper": mapping.paper_name,
                         "Question ID": mapping.question.question_id,
                         "Question": mapping.question.text,
                         "Topic": "",
@@ -123,9 +168,12 @@ def main() -> None:
                 )
                 continue
             for match in mapping.matches:
+                if selected_topic != "All" and match.topic != selected_topic:
+                    continue
                 mapping_rows.append(
                     {
                         "Year": mapping.year,
+                        "Paper": mapping.paper_name,
                         "Question ID": mapping.question.question_id,
                         "Question": mapping.question.text,
                         "Topic": match.topic,
@@ -133,6 +181,35 @@ def main() -> None:
                     }
                 )
         st.dataframe(mapping_rows, use_container_width=True, hide_index=True)
+
+    st.subheader("Top Predicted Questions")
+    predicted_questions = [
+        {
+            "Topic": pattern.topic,
+            "Pattern ID": pattern.pattern_id,
+            "Occurrences": pattern.question_count,
+            "Similarity to Topic": f"{pattern.similarity_to_topic:.2f}",
+            "Years": ", ".join(map(str, pattern.years)),
+            "Representative Question": pattern.representative_question,
+        }
+        for pattern in result.question_patterns
+        if (selected_topic == "All" or pattern.topic == selected_topic)
+        and (selected_year == "All" or any(str(year) == selected_year for year in pattern.years))
+    ]
+    st.dataframe(
+        predicted_questions,
+        use_container_width=True,
+        hide_index=True,
+        column_config={
+            "Representative Question": st.column_config.TextColumn(width="large"),
+        },
+    )
+
+    st.subheader("Study Recommendations")
+    rec_col1, rec_col2, rec_col3 = st.columns(3)
+    _render_recommendation_card(rec_col1, "HIGH PRIORITY", result.recommendations["high_priority"], "#ffedd5")
+    _render_recommendation_card(rec_col2, "MEDIUM PRIORITY", result.recommendations["medium_priority"], "#fef3c7")
+    _render_recommendation_card(rec_col3, "LOW PRIORITY", result.recommendations["low_priority"], "#dbeafe")
 
     st.subheader("Download Reports")
     st.download_button(
@@ -153,7 +230,128 @@ def main() -> None:
         file_name="topic_predictions.csv",
         mime="text/csv",
     )
+    st.download_button(
+        label="Download question_patterns.csv",
+        data=reports["pattern_csv"].read_bytes(),
+        file_name="question_patterns.csv",
+        mime="text/csv",
+    )
+    st.download_button(
+        label="Download study_recommendations.json",
+        data=reports["recommendation_json"].read_bytes(),
+        file_name="study_recommendations.json",
+        mime="application/json",
+    )
     st.caption(f"Reports also saved at `{output_dir}`.")
+
+
+def _render_recommendation_card(column, title: str, topics: list, background: str) -> None:
+    if topics:
+        body = "<br>".join(
+            f"<strong>{item.topic}</strong><br>score={item.score:.2f} | {item.pattern}"
+            for item in topics
+        )
+    else:
+        body = "No topics in this bucket"
+
+    column.markdown(
+        (
+            f"<div style='background:{background};padding:1rem;border-radius:0.75rem;"
+            "height:260px;color:#111827;display:flex;flex-direction:column;'>"
+            f"<div style='font-weight:700;font-size:1rem;margin-bottom:0.75rem;'>{title}</div>"
+            f"<div style='line-height:1.6;font-size:0.95rem;overflow:auto;'>{body}</div>"
+            "</div>"
+        ),
+        unsafe_allow_html=True,
+    )
+
+
+def _build_frequency_bar_chart(topics) -> go.Figure:
+    ordered_topics = sorted(topics, key=lambda item: item.frequency, reverse=True)
+    color_map = {"HIGH": "#f97316", "MEDIUM": "#eab308", "LOW": "#3b82f6"}
+    figure = go.Figure(
+        go.Bar(
+            x=[item.frequency for item in ordered_topics],
+            y=[item.topic for item in ordered_topics],
+            orientation="h",
+            marker_color=[color_map.get(item.confidence, "#6b7280") for item in ordered_topics],
+            customdata=[[item.confidence, item.pattern] for item in ordered_topics],
+            hovertemplate=(
+                "<b>%{y}</b><br>Frequency=%{x}<br>Confidence=%{customdata[0]}"
+                "<br>Pattern=%{customdata[1]}<extra></extra>"
+            ),
+        )
+    )
+    figure.update_layout(
+        title="Topic Frequency",
+        xaxis_title="Frequency",
+        yaxis_title="Topic",
+        yaxis={"categoryorder": "total ascending"},
+        margin={"l": 10, "r": 10, "t": 50, "b": 10},
+        plot_bgcolor="#111827",
+        paper_bgcolor="#111827",
+        font={"size": 13, "color": "#f9fafb"},
+        xaxis={"gridcolor": "#374151", "zerolinecolor": "#374151"},
+        yaxis_showgrid=False,
+    )
+    return figure
+
+
+def _build_topic_year_heatmap(question_mappings, selected_year: str, selected_topic: str) -> go.Figure:
+    topic_year_counts: dict[str, dict[int, int]] = {}
+    years: set[int] = set()
+
+    for mapping in question_mappings:
+        if selected_year != "All" and str(mapping.year) != selected_year:
+            continue
+        if not mapping.matches:
+            continue
+        for match in mapping.matches[:1]:
+            if selected_topic != "All" and match.topic != selected_topic:
+                continue
+            topic_year_counts.setdefault(match.topic, {})
+            topic_year_counts[match.topic][mapping.year] = topic_year_counts[match.topic].get(mapping.year, 0) + 1
+            years.add(mapping.year)
+
+    top_topics = sorted(
+        ((topic, sum(year_counts.values())) for topic, year_counts in topic_year_counts.items()),
+        key=lambda item: item[1],
+        reverse=True,
+    )[:10]
+    ordered_topics = [topic for topic, _ in top_topics]
+    ordered_years = sorted(years)
+    z_values = [
+        [topic_year_counts.get(topic, {}).get(year, 0) for year in ordered_years]
+        for topic in ordered_topics
+    ] or [[0]]
+
+    figure = go.Figure(
+        data=go.Heatmap(
+            z=z_values,
+            x=ordered_years or ["No data"],
+            y=ordered_topics or ["No topics"],
+            colorscale="YlOrRd",
+            colorbar={"title": "Frequency"},
+            hovertemplate="Topic=%{y}<br>Year=%{x}<br>Frequency=%{z}<extra></extra>",
+        )
+    )
+    figure.update_layout(
+        title="Topic-Year Heatmap",
+        xaxis_title="Year",
+        yaxis_title="Topic",
+        margin={"l": 10, "r": 10, "t": 50, "b": 10},
+        plot_bgcolor="#111827",
+        paper_bgcolor="#111827",
+        font={"size": 13, "color": "#f9fafb"},
+        xaxis={"gridcolor": "#374151"},
+        yaxis={"gridcolor": "#374151"},
+    )
+    return figure
+
+
+def _parse_manual_topics(value: str) -> list[str] | None:
+    tokens = [token.strip() for token in re.split(r"[,\n]", value) if token.strip()]
+    return tokens or None
 
 
 if __name__ == "__main__":

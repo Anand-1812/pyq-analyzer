@@ -1,3 +1,15 @@
+Metadata-Version: 2.4
+Name: exam-topic-predictor
+Version: 0.1.0
+Summary: Map exam-paper questions to syllabus topics and forecast likely recurring topics.
+Requires-Python: >=3.11
+Description-Content-Type: text/markdown
+Requires-Dist: numpy<3.0,>=1.26
+Requires-Dist: pdfplumber<1.0,>=0.11
+Requires-Dist: scikit-learn<2.0,>=1.5
+Requires-Dist: streamlit<2.0,>=1.45
+Requires-Dist: rapidocr-onnxruntime<2.0,>=1.2
+
 # Exam Topic Predictor
 
 This project analyzes previous-year question papers against a syllabus PDF to:
@@ -44,11 +56,11 @@ pip install -e . --no-build-isolation
 ## Input Convention
 
 - Syllabus: one PDF file.
-- Previous-year papers: one or more PDFs per year.
+- Previous-year papers: one PDF per year.
 - Include the year in each paper filename, for example:
   - `dbms_2021.pdf`
-  - `dbms_2022_set1.pdf`
-  - `dbms_2023_midterm.pdf`
+  - `dbms_2022.pdf`
+  - `dbms_2023.pdf`
 
 ## Run
 
@@ -84,18 +96,13 @@ Open the local URL shown in terminal, upload the PDFs, then click `Run Analysis`
 - `analysis_summary.json`: Full structured result
 - `question_topic_mapping.csv`: Question-level mapped topics with similarity
 - `topic_predictions.csv`: Forecasted likely topics with scores
-- `topic_predictions.json`: Clean JSON export of predicted topics
-- `question_patterns.csv`: Clustered recurring question patterns
-- `question_patterns.json`: Clean JSON export of recurring question patterns
 
 ## Model Logic
 
-- Topic mapping uses sentence-transformer embeddings with semantic cosine similarity.
+- Topic mapping uses TF-IDF cosine similarity between question text and extracted syllabus topics.
 - Forecast score combines:
   - Topic frequency in previous papers
   - Coverage across years
-  - Recency, with newer appearances weighted higher
-- Gap detection boosts topics that tend to recur every 2 to 3 years.
-- Similar question formulations are clustered to surface common exam patterns.
+  - Repetition cycle alignment (topic recurrence timing)
 
 This is a practical statistical baseline and works well for academic revision planning with limited data.
