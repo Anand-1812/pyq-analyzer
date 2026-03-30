@@ -1,0 +1,399 @@
+{
+  "project": {
+    "name": "exam-topic-predictor",
+    "display_name": "Exam Topic Predictor",
+    "version": "0.1.0",
+    "description": "Analyzes syllabus PDFs and previous-year exam paper PDFs to extract topics, map questions to syllabus topics, detect recurring patterns, and forecast likely upcoming topics.",
+    "repository_layout": "src layout",
+    "root_entrypoints": [
+      {
+        "type": "streamlit_app",
+        "path": "app.py",
+        "purpose": "Interactive web UI for uploading PDFs, running analysis, visualizing results, and downloading reports."
+      },
+      {
+        "type": "cli",
+        "path": "src/exam_topic_predictor/cli.py",
+        "command": "exam-topic-predictor",
+        "purpose": "Command-line entrypoint for running the analyzer without the web UI."
+      }
+    ]
+  },
+  "runtime": {
+    "language": {
+      "primary": "Python",
+      "minimum_version": "3.11",
+      "tested_environment_in_repo": "Python 3.13 virtual environment"
+    },
+    "execution_model": {
+      "style": "Single-process local application",
+      "ui_runtime": "Streamlit",
+      "batch_runtime": "CLI script",
+      "state_model": "Run-based processing of uploaded/input PDF files"
+    }
+  },
+  "build_and_packaging": {
+    "build_backend": "setuptools.build_meta",
+    "build_requirements": [
+      "setuptools>=68",
+      "wheel"
+    ],
+    "packaging_strategy": {
+      "package_dir": "src",
+      "package_name": "exam_topic_predictor",
+      "editable_install_supported": true
+    },
+    "dependency_files": [
+      "pyproject.toml",
+      "requirements.txt"
+    ],
+    "test_configuration": {
+      "framework": "pytest",
+      "testpaths": [
+        "tests"
+      ],
+      "pythonpath": [
+        "src"
+      ]
+    }
+  },
+  "ui_and_visualization": {
+    "framework": "Streamlit",
+    "file": "app.py",
+    "responsibilities": [
+      "File upload for syllabus and previous-year papers",
+      "Triggering the core analysis pipeline",
+      "Presenting metrics and forecast tables",
+      "Displaying topic frequency and topic-year charts",
+      "Providing downloadable output reports"
+    ],
+    "visualization_library": {
+      "name": "Plotly",
+      "usage": [
+        "Horizontal bar chart for topic frequency",
+        "Heatmap for topic occurrence by year"
+      ]
+    },
+    "notable_ui_customizations": [
+      "Hides Streamlit header action area to remove the deploy button",
+      "Uses project-root src path injection so the app can run directly from the repository"
+    ]
+  },
+  "core_architecture": {
+    "style": "Modular local analytics pipeline",
+    "major_layers": [
+      {
+        "name": "input_and_io",
+        "modules": [
+          "src/exam_topic_predictor/io/pdf_reader.py"
+        ],
+        "responsibility": "Reads text from syllabus and exam paper PDFs using direct extraction and OCR fallback."
+      },
+      {
+        "name": "parsing",
+        "modules": [
+          "src/exam_topic_predictor/parsing/question_parser.py",
+          "src/exam_topic_predictor/parsing/syllabus_parser.py",
+          "src/exam_topic_predictor/parsing/topic_cleaner.py"
+        ],
+        "responsibility": "Normalizes raw text, extracts question units, extracts and cleans syllabus topics, and deduplicates topic candidates."
+      },
+      {
+        "name": "semantic_mapping",
+        "modules": [
+          "src/exam_topic_predictor/embeddings.py",
+          "src/exam_topic_predictor/mapping/topic_mapper.py"
+        ],
+        "responsibility": "Embeds text with sentence-transformers and maps exam questions to cleaned syllabus topics using cosine similarity."
+      },
+      {
+        "name": "forecasting_and_pattern_mining",
+        "modules": [
+          "src/exam_topic_predictor/modeling/topic_forecaster.py",
+          "src/exam_topic_predictor/modeling/question_pattern_miner.py"
+        ],
+        "responsibility": "Scores topics using recurrence signals and clusters question embeddings to identify likely repeated question patterns."
+      },
+      {
+        "name": "orchestration",
+        "modules": [
+          "src/exam_topic_predictor/pipeline.py"
+        ],
+        "responsibility": "Coordinates PDF extraction, topic parsing, mapping, forecasting, pattern mining, and output assembly."
+      },
+      {
+        "name": "reporting",
+        "modules": [
+          "src/exam_topic_predictor/reporting/report_writer.py"
+        ],
+        "responsibility": "Exports structured results to JSON and CSV files."
+      }
+    ]
+  },
+  "data_flow": {
+    "inputs": [
+      "One syllabus PDF",
+      "One or more previous-year exam paper PDFs with year embedded in filename"
+    ],
+    "processing_steps": [
+      "Extract syllabus PDF text",
+      "Extract and clean syllabus topics",
+      "Extract each paper year from the file name",
+      "Extract paper text from each PDF",
+      "Parse paper text into individual questions",
+      "Encode syllabus topics and questions into sentence embeddings",
+      "Map each question to top syllabus topics using cosine similarity",
+      "Restrict final mappings to cleaned syllabus topics only",
+      "Forecast repeated and likely topics using weighted statistical signals",
+      "Cluster semantically similar questions to identify predicted question patterns",
+      "Generate recommendation buckets and export reports"
+    ],
+    "outputs": [
+      "analysis_summary.json",
+      "question_topic_mapping.csv",
+      "topic_predictions.csv",
+      "question_patterns.csv",
+      "study_recommendations.json"
+    ]
+  },
+  "algorithms_and_ml": {
+    "semantic_embedding_model": {
+      "library": "sentence-transformers",
+      "default_model_name": "all-MiniLM-L6-v2",
+      "usage": [
+        "Question-to-topic semantic mapping",
+        "Topic deduplication support",
+        "Question clustering support"
+      ]
+    },
+    "similarity_measure": {
+      "method": "cosine similarity",
+      "library": "scikit-learn",
+      "applied_to": [
+        "Question embeddings vs syllabus topic embeddings",
+        "Cluster centroid vs question embeddings",
+        "Topic-cleaning semantic comparisons"
+      ]
+    },
+    "question_to_topic_mapping": {
+      "module": "src/exam_topic_predictor/mapping/topic_mapper.py",
+      "approach": "Rank syllabus topics by semantic similarity for each question and keep top-k matches above threshold, with a best-match fallback."
+    },
+    "topic_forecasting": {
+      "module": "src/exam_topic_predictor/modeling/topic_forecaster.py",
+      "signals": [
+        "Frequency signal",
+        "Coverage across years",
+        "Recency signal with exponential decay",
+        "Pattern signal based on recurrence gap stability"
+      ],
+      "confidence_strategy": [
+        "Percentile-based confidence labels for larger datasets",
+        "Threshold-based confidence labels for small datasets"
+      ]
+    },
+    "question_pattern_mining": {
+      "module": "src/exam_topic_predictor/modeling/question_pattern_miner.py",
+      "clustering_algorithm": "KMeans",
+      "goal": "Find representative recurring question patterns and map them back to syllabus topics."
+    }
+  },
+  "pdf_and_ocr_processing": {
+    "primary_pdf_text_extraction": {
+      "library": "pdfplumber",
+      "purpose": "Extract text directly from text-based PDFs."
+    },
+    "ocr_fallback": {
+      "libraries": [
+        "rapidocr-onnxruntime",
+        "pypdfium2",
+        "numpy"
+      ],
+      "purpose": "Render PDF pages to images and OCR them when direct text extraction fails."
+    },
+    "behavior": "If direct PDF text extraction returns empty text, OCR fallback is attempted before failing the run."
+  },
+  "dependencies": {
+    "runtime_dependencies": [
+      {
+        "name": "numpy",
+        "version_spec": ">=1.26,<3.0",
+        "used_for": [
+          "Embedding arrays",
+          "Numeric processing",
+          "Forecast score calculations",
+          "OCR image array conversion"
+        ]
+      },
+      {
+        "name": "pdfplumber",
+        "version_spec": ">=0.11,<1.0",
+        "used_for": [
+          "Reading text-based PDF content"
+        ]
+      },
+      {
+        "name": "plotly",
+        "version_spec": ">=5.24,<6.0",
+        "used_for": [
+          "Interactive charts in the Streamlit UI"
+        ]
+      },
+      {
+        "name": "scikit-learn",
+        "version_spec": ">=1.5,<2.0",
+        "used_for": [
+          "Cosine similarity",
+          "KMeans clustering",
+          "Stop word list support"
+        ]
+      },
+      {
+        "name": "sentence-transformers",
+        "version_spec": ">=3.0,<4.0",
+        "used_for": [
+          "Sentence embedding generation for topics and questions"
+        ]
+      },
+      {
+        "name": "streamlit",
+        "version_spec": ">=1.45,<2.0",
+        "used_for": [
+          "Interactive user interface"
+        ]
+      },
+      {
+        "name": "rapidocr-onnxruntime",
+        "version_spec": ">=1.2,<2.0",
+        "used_for": [
+          "OCR extraction for scanned or image-only PDFs"
+        ]
+      }
+    ],
+    "development_dependencies": [
+      {
+        "name": "pytest",
+        "version_spec": ">=8.2,<9.0",
+        "used_for": [
+          "Unit and behavior tests"
+        ]
+      }
+    ],
+    "transitive_or_runtime_loaded_components": [
+      {
+        "name": "torch",
+        "role": "Backend runtime for sentence-transformers model inference"
+      },
+      {
+        "name": "transformers",
+        "role": "Model loading and transformer architecture support for sentence-transformers"
+      },
+      {
+        "name": "pypdfium2",
+        "role": "PDF page rendering for OCR fallback"
+      }
+    ]
+  },
+  "internal_modules": [
+    {
+      "path": "src/exam_topic_predictor/config.py",
+      "purpose": "Configuration dataclasses for mapping and forecasting behavior."
+    },
+    {
+      "path": "src/exam_topic_predictor/schemas.py",
+      "purpose": "Structured dataclasses representing questions, matches, forecasts, and patterns."
+    },
+    {
+      "path": "src/exam_topic_predictor/text_utils.py",
+      "purpose": "Text normalization helpers used across parsing and PDF ingestion."
+    },
+    {
+      "path": "src/exam_topic_predictor/io/pdf_reader.py",
+      "purpose": "PDF text extraction with OCR fallback."
+    },
+    {
+      "path": "src/exam_topic_predictor/parsing/question_parser.py",
+      "purpose": "Question extraction from exam paper text."
+    },
+    {
+      "path": "src/exam_topic_predictor/parsing/syllabus_parser.py",
+      "purpose": "Syllabus topic extraction from cleaned text."
+    },
+    {
+      "path": "src/exam_topic_predictor/parsing/topic_cleaner.py",
+      "purpose": "Topic normalization, cleanup, deduplication, and display formatting."
+    },
+    {
+      "path": "src/exam_topic_predictor/embeddings.py",
+      "purpose": "Sentence-transformer model loading and cached embedding generation."
+    },
+    {
+      "path": "src/exam_topic_predictor/mapping/topic_mapper.py",
+      "purpose": "Semantic mapping of exam questions to syllabus topics."
+    },
+    {
+      "path": "src/exam_topic_predictor/modeling/topic_forecaster.py",
+      "purpose": "Weighted forecasting of likely important topics."
+    },
+    {
+      "path": "src/exam_topic_predictor/modeling/question_pattern_miner.py",
+      "purpose": "Question clustering and representative question prediction."
+    },
+    {
+      "path": "src/exam_topic_predictor/pipeline.py",
+      "purpose": "Top-level orchestration and result packaging."
+    },
+    {
+      "path": "src/exam_topic_predictor/reporting/report_writer.py",
+      "purpose": "JSON and CSV report generation."
+    },
+    {
+      "path": "src/exam_topic_predictor/cli.py",
+      "purpose": "CLI argument parsing and pipeline execution."
+    }
+  ],
+  "testing": {
+    "framework": "pytest",
+    "test_files": [
+      "tests/test_pipeline.py",
+      "tests/test_question_parser.py",
+      "tests/test_syllabus_parser.py",
+      "tests/test_topic_forecaster.py"
+    ],
+    "coverage_focus": [
+      "Pipeline filename year extraction",
+      "Question parsing",
+      "Syllabus parsing",
+      "Forecast scoring behavior"
+    ]
+  },
+  "storage_and_outputs": {
+    "local_data_directories": [
+      "data/raw",
+      "data/processed",
+      "data/outputs"
+    ],
+    "report_storage_pattern": "data/outputs/run_YYYYMMDD_HHMMSS",
+    "persistence_model": "Local filesystem output files, no external database"
+  },
+  "integration_and_external_services": {
+    "database": null,
+    "cloud_backend": null,
+    "authentication": null,
+    "external_ai_api": null,
+    "model_source": "Hugging Face model ecosystem via sentence-transformers when model cache is not already local"
+  },
+  "deployment_notes": {
+    "best_fit": [
+      "Local machine execution",
+      "Streamlit-focused hosting platforms",
+      "General Python app hosting with filesystem access"
+    ],
+    "not_ideal_as_is": [
+      "Direct Vercel deployment as a Streamlit server"
+    ],
+    "reasons": [
+      "The project is built as a Streamlit app plus Python pipeline rather than a Vercel-style request handler."
+    ]
+  }
+}

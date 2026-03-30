@@ -18,7 +18,10 @@ def get_embedding_model(model_name: str):
             "sentence-transformers is required for semantic topic mapping and question clustering. "
             "Install the updated project dependencies before running the analyzer."
         ) from exc
-    return SentenceTransformer(model_name)
+    try:
+        return SentenceTransformer(model_name, local_files_only=True)
+    except Exception:
+        return SentenceTransformer(model_name)
 
 
 def encode_texts(texts: Iterable[str], model_name: str) -> np.ndarray:

@@ -1,10 +1,16 @@
 from datetime import datetime
 from pathlib import Path
 import re
+import sys
 from tempfile import TemporaryDirectory
 
 import plotly.graph_objects as go
 import streamlit as st
+
+PROJECT_ROOT = Path(__file__).resolve().parent
+SRC_PATH = PROJECT_ROOT / "src"
+if str(SRC_PATH) not in sys.path:
+    sys.path.insert(0, str(SRC_PATH))
 
 from exam_topic_predictor.config import ForecastConfig, MappingConfig
 from exam_topic_predictor.pipeline import run_pipeline
@@ -15,21 +21,161 @@ YEAR_PATTERN = re.compile(r"(19|20)\d{2}")
 
 def main() -> None:
     st.set_page_config(page_title="Exam Topic Predictor", layout="wide")
-    st.title("Exam Topic Predictor")
-    st.caption("Upload syllabus and previous-year papers, then get repeated and likely upcoming topics.")
+    st.markdown(
+        """
+        <style>
+        .stApp {
+            background:
+                radial-gradient(circle at top left, rgba(34, 211, 238, 0.14), transparent 28%),
+                radial-gradient(circle at top right, rgba(56, 189, 248, 0.12), transparent 30%),
+                linear-gradient(180deg, #020617 0%, #0f172a 48%, #020617 100%);
+        }
+        [data-testid="stHeaderActionElements"] {
+            display: none;
+        }
+        [data-testid="stToolbar"] {
+            display: none;
+        }
+        .hero-shell {
+            padding: 2.5rem 2rem;
+            border-radius: 28px;
+            background: linear-gradient(135deg, rgba(15,23,42,0.94), rgba(3,7,18,0.92));
+            border: 1px solid rgba(34, 211, 238, 0.16);
+            box-shadow: 0 24px 80px rgba(2, 6, 23, 0.45);
+            backdrop-filter: blur(12px);
+        }
+        .hero-badge {
+            display: inline-block;
+            padding: 0.45rem 0.8rem;
+            border-radius: 999px;
+            background: #164e63;
+            color: #ecfeff;
+            font-size: 0.82rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+        .hero-title {
+            margin: 1rem 0 0.65rem 0;
+            font-size: 3.4rem;
+            line-height: 1.02;
+            font-weight: 800;
+            color: #f8fafc;
+        }
+        .hero-copy {
+            margin: 0;
+            max-width: 720px;
+            font-size: 1.08rem;
+            line-height: 1.7;
+            color: #cbd5e1;
+        }
+        .hero-credit {
+            margin-top: 1.1rem;
+            font-size: 0.96rem;
+            font-weight: 700;
+            color: #67e8f9;
+        }
+        .glass-card {
+            height: 100%;
+            padding: 1.25rem;
+            border-radius: 22px;
+            background: rgba(15, 23, 42, 0.78);
+            border: 1px solid rgba(71, 85, 105, 0.4);
+            box-shadow: 0 16px 50px rgba(2, 6, 23, 0.3);
+        }
+        .glass-card h3 {
+            margin: 0 0 0.6rem 0;
+            color: #f8fafc;
+            font-size: 1.08rem;
+        }
+        .glass-card p {
+            margin: 0;
+            color: #cbd5e1;
+            line-height: 1.65;
+            font-size: 0.97rem;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
+    if "show_analyzer" not in st.session_state:
+        st.session_state.show_analyzer = False
 
-    with st.sidebar:
-        st.subheader("Model Settings")
-        top_n = st.slider("Likely topics (Top N)", min_value=3, max_value=20, value=10, step=1)
-        min_similarity = st.slider("Minimum topic similarity", min_value=0.0, max_value=0.95, value=0.4, step=0.01)
-        top_k_topics = st.slider("Max topics per question", min_value=1, max_value=5, value=3, step=1)
-        min_question_chars = st.slider("Minimum question length", min_value=10, max_value=120, value=24, step=2)
-        manual_topics_input = st.text_area(
-            "Optional: Provide Cleaned Topics (Comma Separated)",
-            help="Optional fallback. If provided, these topics override PDF syllabus extraction.",
-            height=120,
-            placeholder="Linear Regression, Logistic Regression, Decision Trees",
-        )
+    if not st.session_state.show_analyzer:
+        _render_homepage()
+        return
+
+    _render_analyzer()
+
+
+def _render_homepage() -> None:
+    st.markdown(
+        """
+        <section class="hero-shell">
+            <div class="hero-badge">Exam Intelligence Platform</div>
+            <h1 class="hero-title">Predict high-value exam topics before you start revising.</h1>
+            <p class="hero-copy">
+                Upload a syllabus PDF and previous-year papers to uncover repeated topics, forecast likely
+                upcoming areas, inspect topic patterns, and download polished reports in one place.
+            </p>
+            <div class="hero-credit">Made by Biplob, Dev, Anand</div>
+        </section>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    st.write("")
+    col1, col2, col3 = st.columns(3)
+    col1.markdown(
+        """
+        <div class="glass-card">
+            <h3>Semantic Topic Mapping</h3>
+            <p>Questions are matched against syllabus topics using sentence embeddings instead of simple keyword overlap.</p>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+    col2.markdown(
+        """
+        <div class="glass-card">
+            <h3>Pattern-Aware Forecasting</h3>
+            <p>Frequency, year coverage, recency, and recurrence gaps are combined to highlight likely important topics.</p>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+    col3.markdown(
+        """
+        <div class="glass-card">
+            <h3>Ready-to-Download Reports</h3>
+            <p>Generate structured JSON and CSV outputs for quick revision planning, analysis sharing, and record keeping.</p>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    st.write("")
+    action_col1, action_col2 = st.columns([1.2, 1])
+    with action_col1:
+        if st.button("Open Analyzer", type="primary", use_container_width=True):
+            st.session_state.show_analyzer = True
+            st.rerun()
+    with action_col2:
+        st.info("Best results come from one syllabus PDF and paper files named with years like `dbms_2023.pdf`.")
+
+
+def _render_analyzer() -> None:
+    top_bar_col1, top_bar_col2 = st.columns([5, 1.3])
+    with top_bar_col1:
+        st.title("Exam Topic Predictor")
+        st.caption("Upload syllabus and previous-year papers, then get repeated and likely upcoming topics.")
+    with top_bar_col2:
+        st.write("")
+        if st.button("Back Home", use_container_width=True):
+            st.session_state.show_analyzer = False
+            st.rerun()
+
+    top_n = 10
 
     syllabus_pdf = st.file_uploader("Syllabus PDF", type=["pdf"], accept_multiple_files=False)
     paper_pdfs = st.file_uploader("Previous-Year Paper PDFs", type=["pdf"], accept_multiple_files=True)
@@ -48,13 +194,9 @@ def main() -> None:
         )
         return
 
-    mapping_config = MappingConfig(
-        min_similarity=min_similarity,
-        top_k_topics=top_k_topics,
-        min_question_characters=min_question_chars,
-    )
+    mapping_config = MappingConfig()
     forecast_config = ForecastConfig()
-    manual_topics = _parse_manual_topics(manual_topics_input)
+    manual_topics = None
 
     with st.spinner("Running analysis..."):
         try:
@@ -347,12 +489,5 @@ def _build_topic_year_heatmap(question_mappings, selected_year: str, selected_to
         yaxis={"gridcolor": "#374151"},
     )
     return figure
-
-
-def _parse_manual_topics(value: str) -> list[str] | None:
-    tokens = [token.strip() for token in re.split(r"[,\n]", value) if token.strip()]
-    return tokens or None
-
-
 if __name__ == "__main__":
     main()
